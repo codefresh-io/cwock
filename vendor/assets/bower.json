@@ -1,0 +1,10 @@
+{
+  "name": "dsl-generated dependencies",
+  "dependencies": {
+    "jquery-ujs": "latest",
+    "bootstrap": "latest",
+    "backbone.marionette": "latest",
+    "moment": "latest",
+    "backbone.stickit": "latest"
+  }
+}
