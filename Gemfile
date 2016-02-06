@@ -6,7 +6,6 @@ gem 'pg', '~> 0.15'
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer'
 gem 'sass-rails'
-gem 'less-rails'
 gem 'uglifier'
 gem 'coffee-rails'
 gem 'bower-rails'
