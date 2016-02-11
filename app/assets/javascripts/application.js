@@ -12,6 +12,7 @@
 //
 // Bower packages
 //= require jquery/dist/jquery
+//= require jquery.scrollTo/jquery.scrollTo
 //= require bootstrap/dist/js/bootstrap
 //= require moment/moment
 //= require moment/min/locales

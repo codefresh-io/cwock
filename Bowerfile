@@ -1,4 +1,5 @@
 asset 'jquery-ujs'
+asset 'jquery.scrollTo'
 asset 'bootstrap', '~>4.0.0'
 asset 'backbone.marionette'
 asset 'moment'

@@ -2,6 +2,7 @@
   "name": "dsl-generated dependencies",
   "dependencies": {
     "jquery-ujs": "latest",
+    "jquery.scrollTo": "latest",
     "bootstrap": "~>4.0.0",
     "backbone.marionette": "latest",
     "moment": "latest",

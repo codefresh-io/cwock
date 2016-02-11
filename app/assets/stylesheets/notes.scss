@@ -2,6 +2,47 @@ body {
   padding-top: 5rem;
 }
 #cwock {
-  padding: 3rem 1.5rem;
+  position: relative;
+  width: 20rem;
   text-align: center;
+  .title {
+    position: fixed;
+    z-index: 10;
+    background: white;
+    &.holder {
+      position: relative;
+    }
+    .date {
+      font-size: smaller;
+    }
+    .ref {
+      font-weight: bolder;
+      opacity: 0.5;
+    }
+  }
+  .time-scale {
+    margin-bottom: 9em;
+    .hour {
+      font-weight: bolder;
+      opacity: 0.25;
+    }
+  }
+  .title.holder, .time-scale .hour {
+    height: 9rem;
+  }
+  .notes {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    .note {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      &.focused {
+        font-size: larger;
+      }
+    }
+  }
 }
