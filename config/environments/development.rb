@@ -38,4 +38,9 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+
+  Byebug.start_server '0.0.0.0', ENV['RUBY_DEBUG_PORT'].to_i  if defined?(Byebug) && ENV['RUBY_DEBUG_PORT']
+
+  config.web_console.whitelisted_ips = '192.168.0.0/16'  if config.web_console
+
 end

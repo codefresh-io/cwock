@@ -1,0 +1,108 @@
+\&#x1f554; \&#x1f560; \&#x1f555; \&#x1f561; \&#x1f556; \&#x1f562; \&#x1f557; \&#x1f563; \&#x1f558; \&#x1f564; \&#x1f559; \&#x1f565; \&#x1f55a; \&#x1f566; \&#x1f55b; \&#x1f567; \&#x1f550; \&#x1f55c; \&#x1f551; \&#x1f55d; \&#x1f552; \&#x1f55e; \&#x1f553; \&#x1f55f;
+
+= {Cwock}[https://cwock.com] --- the time-oriented microblog
+*A* {Codefresh}[https://codefresh.io] *demo* */* *Getting* *Started* *with* {Codefresh}[https://codefresh.io] *on* {Rails}[http://rubyonrails.org].
+
+== Intro-Promo
+
+You're a full-stack developer on Rails.
+And you'd like the setup of your servers to be smooth.
+As smooth as development in Ruby is.
+{Docker-smooth}[https://www.docker.com].
+Plus, you probably work in a team.
+We've got you.
+Wrap your stack up, afresh.
+
+In case you're still wondering, working with containers makes you even full-stack-er.
+Now however full-stack you are, setting servers up isn't your job,
+still if DevOps write your {Dockerfile}[https://docs.docker.com/engine/reference/builder] for you,
+you're probably doing it wrong.
+
+Codefresh will connect to your repository,
+build docker images when you push to branches,
+run tests in its hosted "on-demand" environments,
+then — upon success — upload the images to docker hub,
+and even launch pre-configured environments on demand.
+You and your team will have instant access to and clear visibility of your running and deployable containers,
+at codefresh.io and through webhook-based integrations.
+
+We encourage you to learn more about the Docker container technologies and
+{here's a nice article}[http://blog.carbonfive.com/2015/03/17/docker-rails-docker-compose-together-in-your-development-workflow/] you may start with.
+
+
+--
+== TL;DR
+++
+== Brief Walkthrough
+
+- {Fork (or clone+push) our sample app repo}[https://github.com/codefresh-io/cwock] if you don't have a generic Rails app handy
+- Register with {Codefresh}[https://codefresh.io] for FREE with your GitHub or Bitbucket account
+- Click on Add Service
+- Choose your Repository and Branch, click on Next
+- Choose Rails Dockerfile if you don't have one in the repo, click on Next
+- If you have your Dockerfile in the repo, compare to {our generic Rails Dockerfile}[https://github.com/codefresh-io/cwock/blob/master/Dockerfile], change the former as appropriate
+- If you don't have one in the repo, review the generated Dockerfile, click on Next
+- Make sure the (unit) Test script is empty, click on Create
+- Review the results, click on Close & Build
+- Click on +'s to see the logs, see that the build succeeds
+- Click on the cogwheel, review your Settings
+- Click on Push to Docker Registry, click on the {Docker Hub}[http://hub.docker.com] icon, follow the instructions, click on Save
+- Click Compositions, enter Staging for the Name, paste the following to the body on the right:
+    web:
+      image: codefresh/cwock:master
+      links:
+        - db
+      ports:
+        - 8000:3000
+        - 3333:3333
+      environment:
+        - RUBY_DEBUG_PORT=3333
+    db:
+      image: postgres
+- Replace 'codefresh/cwock:master' with your docker_hub_user/repo:branch
+- Remove the {'RUBY_DEBUG_PORT` environment variable}[http://mines.mouldwarp.com/2014/06/pow-and-byebug-staying-in-web-app-dev.html] if security is an issue
+- Review your repo's `config/database.yml` and make sure the settings above match `adapter:` and `host:` there (`postgresql` and `db` respectively)
+- Click on Save, bookmark the URL, click on Launch
+- Click on +'s to see the logs, see that the launch succeeds
+- Click on Open App and see your app running at our crafted URL
+- Go back to Codefresh, click on Services
+- Click on the cogwheel (Settings) of your app service, click on the Integration Test
+- Paste the following to the test body
+    bin/rake db:test:prepare
+    bin/rake spec
+- Select Run tests with composition, choose Staging, click on Save
+- Click on Build (click on Launch dropdown if needed)
+- Click on +'s to see the logs, see that the build succeeds
+- Stretch, your project is set up, now every push to your repo/branch will trigger a build just like this and you will get a notification if it fails
+- And if it doesn't fail, you may always go to the URL you bookmarked above, click on Launch and then, on Open App, to go straight to your fresh staging server
+
+
+== Take a generic Rails app...
+
+You're welcome to clone https://github.com/codefresh-io/cwock
+({fork it on github}[https://github.com/codefresh-io/cwock] or
+{import it on BitBucket}[https://bitbucket.org/repo/import]).
+
+Currently, Codefresh works with either GitHub or Bitbucket,
+with git being the supported source control technology,
+so familiarity with the latter as well as the repository being hosted at GitHub (or Bitbucket)
+would be the only prerequisites to get started.
+
+TBD
+
+
+== To dock or not to dock?
+
+You can use Codefresh knowing nothing of Docker.
+
+TBD
+
+
+== ...and dock it!
+
+TBD
+
+
+== Ok, now what about Cwock??
+
+TBD
