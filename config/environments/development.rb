@@ -41,6 +41,9 @@ Rails.application.configure do
 
   Byebug.start_server '0.0.0.0', ENV['RUBY_DEBUG_PORT'].to_i  if defined?(Byebug) && ENV['RUBY_DEBUG_PORT']
 
-  config.web_console.whitelisted_ips = '192.168.0.0/16'  if config.web_console
+  if config.web_console
+    config.web_console.development_only = false  # NOTE for test
+    config.web_console.whitelisted_ips = '192.168.0.0/16'
+  end
 
 end

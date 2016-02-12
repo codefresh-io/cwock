@@ -1,4 +1,4 @@
-asset 'jquery-ujs'
+asset 'jquery-ujs'  # NOTE not clear if even needed
 asset 'jquery.scrollTo'
 asset 'bootstrap', '~>4.0.0'
 asset 'backbone.marionette'
