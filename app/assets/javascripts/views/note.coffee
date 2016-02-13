@@ -1,8 +1,15 @@
-define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', 'backbone.stickit', 'jquery.scrollTo'], (_, Marionette, moment, ticker, NoteView, StickIt, ScrollTo) ->
+define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', 'backbone.stickit', 'jquery.scrollTo'], (_, Marionette, moment, ticker, NoteView, StickIt, ScrollTo)->
 
   class NoteView extends Marionette.ItemView
 
     className: 'note'
+
+    events:
+      'focus .taken_at .input': 'onTakenAtFocus'
+      'blur .taken_at .input': 'onTakenAtBlur'
+      'focus .content .input': 'onContentFocus'
+      'input .content .input': 'onContentInput'
+      'blur .content .input': 'onContentBlur'
 
     bindings:
       '.taken_at .value':
@@ -10,41 +17,110 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
         onGet: (taken_at)->  # XXX too much processing — when taken_at changes
           mom = moment(taken_at)
           @$el.css top: "#{mom.diff(moment(mom).startOf('day'), 'hours', true) * 100/24}%"
-          if @ticking
-            $.scrollTo @$el, {offset: -$(window).height()/2}
-            mom.format('LTS')
-          else
-            mom.format 'LT'
-      '.content .value': 'content'
+          _.tap(
+            if @isTicking()
+              @scrollToSelf()
+              @updateNowNav true
+              mom.format('LTS')
+            else
+              mom.format 'LT'
+            , (formatted)=>
+              @$('.taken_at .input').text(formatted)  unless @taken_at_focused || @taken_at_input
+          )
+      '.content .value':
+        observe: 'content',
+        onGet: (content)->
+          @$('.content .input').text(content)  unless @content_focused || @content_input
+          content
 
     template: _.template(
-      '<div class="taken_at"><time class="value"></time></div>' +
-      '<div class="content"><span class="value" contenteditable="true">Quid facis?</div></div>'
+      '<div class="taken_at"><time class="value"></time><time class="input" contenteditable="true"></time></div>' +
+      '<div class="content"><span class="value"></span><span class="input" contenteditable="true"></span></div>'
     )
 
     constructor: (options)->
       super
-
       @parentView = options.parentView
 
-      @ticking = @isNewModel()
+      @model.set 'content', "quid faciens"  if @isNewModel() && !@model.get('content')
+
+      # XXX must be in onAttach, but couldn't get it working
+      @listenTo window, 'resize', @stickit
+      @listenTo ticker, 'second', @onSecond
 
     isNewModel: ->
       !@model.id
     isModelPersisted: ->
       !@isNewModel()
 
+    isFocused: ->
+      @taken_at_focused || @content_focused
+    isTicking: ->
+      @isNewModel() && @isFocused() && !@taken_at_focused && !@$('.content .input').text()
+
+
     onRender: ->
-      unless @onSecondTickCallback
-        @onSecondTickCallback = (date)=>
-          @model.set 'taken_at', date.getTime()  if @ticking
-          @$el.addClass 'focused', @focused || @ticking
-        ticker.on 'second', @onSecondTickCallback
-      unless @onResize
-        @onResize = => @stickit()
-        $(window).on 'resize', @onResize
-      @stickit()
+      unless @rendered
+        if @isNewModel()
+          @onNavNowCallback = => @onNavNow arguments...
+          $('.nav-cwock-now').on 'click', @onNavNowCallback
+          _.defer @onNavNowCallback
+          @content_focused = true  # NOTE setting in advance to take effect on stickit
+
+        @stickit()
+
+      @rendered = true
 
     onBeforeDestroy: ->
-      $(window).off 'resize', @onResize
-      ticker.off 'second', @onSecondTickCallback  if @onSecondTickCallback
+      @updateNowNav false
+      $('.nav-cwock-now').off 'click', @onNavNowCallback  if @onNavNowCallback
+
+    onSecond: (date)->
+      if @isTicking()
+        @model.set 'taken_at', date.getTime()
+      else
+        @updateNowNav false
+
+    onFocus: ->
+      if !@was_focused
+        @$el.addClass 'focused'
+        @was_focused = true
+
+    onBlur: ->
+      if @was_focused
+        @$el.removeClass 'focused'
+        @was_focused = false
+
+    onContentFocus: ->
+      @content_focused = true
+      @onFocus()
+
+    onContentInput: ->
+      @content_input = true
+
+    onContentBlur: ->
+      @content_focused = false
+      @onBlur()
+
+    onTakenAtFocus: ->
+      @$('.taken_at .input').trigger 'blur'  # XXX temp
+
+    onTakenAtBlur: ->
+
+    onNavNow: (e)->
+      if @isNewModel()
+        # XXX save if dirty instead
+        @$('.content .input').trigger 'focus'
+        @scrollToSelf()
+      else
+        $('.nav-cwock-now').off 'click', @onNavNowCallback  if @onNavNowCallback
+
+      e.preventDefault()  if e
+
+    updateNowNav: (is_now)->
+      if is_now != @was_now
+        $('.nav-cwock-now').toggleClass 'active', is_now
+        @was_now = is_now
+
+    scrollToSelf: ->
+      $.scrollTo @$el, {offset: -$(window).height()/2}

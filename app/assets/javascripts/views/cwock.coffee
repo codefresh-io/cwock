@@ -22,8 +22,6 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/day'], (
 
       current_note = @notes.add({})
 
-      ticker.on 'day', (day)=> @addDay day
-      _.defer => @addDay()
-
-    addDay: (day)->
-      @collection.add day: day
+      @listenTo ticker, 'day', (day)->
+        @collection.add day: day
+      @collection.add {}  # NOTE today

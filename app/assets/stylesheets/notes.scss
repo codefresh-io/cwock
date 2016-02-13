@@ -14,20 +14,23 @@ body {
   display: flex;
   justify-content: center;
 }
+.days {
+  display: flex;
+  justify-content: center;
+}
 .day {
   position: relative;
   width: 20rem;
-  text-align: center;
   .title {
     position: fixed;
     z-index: 10;
+    text-align: center;
     @extend .fuzzy-bg;
     .date {
-      font-size: smaller;
+      opacity: 0.5;
     }
     .ref {
       font-weight: bolder;
-      opacity: 0.5;
     }
   }
   .title-holder {
@@ -39,8 +42,9 @@ body {
   .time-scale {
     margin-bottom: 9em;
     .hour {
+      text-align: center;
       font-weight: bolder;
-      opacity: 0.25;
+      opacity: 0.15;
     }
   }
   .title-holder, .time-scale .hour {
@@ -57,10 +61,32 @@ body {
       position: absolute;
       left: 0;
       width: 100%;
-      padding: 1rem;
       @extend .fuzzy-bg;
+      .taken_at, .content {
+        display: inline-block;
+        position: relative;
+        margin: 0.25rem;
+      }
+      .value {
+        display: block;
+      }
+      .input {
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .value {
+        opacity: 0.15;
+      }
       &.focused {
         font-size: larger;
+        text-align: center;
+        .taken_at, .content {
+          display: block;
+        }
       }
     }
   }
