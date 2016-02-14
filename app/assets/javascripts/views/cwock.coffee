@@ -1,4 +1,4 @@
-define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/day'], (_, Marionette, moment, ticker, DayView) ->
+define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/day', 'models/note_collection'], (_, Marionette, moment, ticker, DayView, NoteCollection) ->
 
   class CwockView extends Marionette.CompositeView
 
@@ -13,14 +13,15 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/day'], (
       collection: @notes  # NOTE it filters itself with day
 
     constructor: (options)->
-      options.collection = new Backbone.Collection  # XXX connect
+      options.collection = new Backbone.Collection
       super
 
       moment.locale window.navigator.language
 
-      @notes = new Backbone.Collection
-
-      current_note = @notes.add({})
+      @notes = new NoteCollection
+      _.defer => @notes.fetch()
+      @listenTo @notes, 'sync', (note)->
+        @current_note = @notes.add({})  if !@current_note || note == @current_note
 
       @listenTo ticker, 'day', (day)->
         @collection.add day: day

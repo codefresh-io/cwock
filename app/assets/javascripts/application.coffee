@@ -1,4 +1,4 @@
-require ['jquery', 'notes'], ($, Notes) ->
+require ['jquery', 'notes', 'backbone.csrf'], ($, Notes, BackboneCsrf) ->
   # NOTE the only running point, postponed until all dependencies are loaded
   $ ->
     Notes.init()

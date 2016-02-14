@@ -1,8 +1,9 @@
 source 'https://rubygems.org'
 
 gem 'rake'
-gem 'rails', '~>4.2.5'
 gem 'pg', '~> 0.15'
+gem 'rails', '~>4.2.5'
+gem 'responders'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 gem 'therubyracer'

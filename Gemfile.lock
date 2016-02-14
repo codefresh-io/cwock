@@ -141,6 +141,8 @@ GEM
     ref (2.0.0)
     requirejs-rails (1.0.0)
       railties (>= 3.1.1)
+    responders (2.1.1)
+      railties (>= 4.2.0, < 5.1)
     sass (3.4.21)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -193,6 +195,7 @@ DEPENDENCIES
   rails (~> 4.2.5)
   rake
   requirejs-rails
+  responders
   sass-rails
   sdoc
   spring

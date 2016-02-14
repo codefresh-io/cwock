@@ -37,7 +37,7 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   # Raises error for missing translations
-  # config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = true
 
   Byebug.start_server '0.0.0.0', ENV['RUBY_DEBUG_PORT'].to_i  if defined?(Byebug) && ENV['RUBY_DEBUG_PORT']
 
@@ -45,5 +45,7 @@ Rails.application.configure do
     config.web_console.development_only = false  # NOTE for test
     config.web_console.whitelisted_ips = '192.168.0.0/16'
   end
+
+  config.action_controller.action_on_unpermitted_parameters = :raise
 
 end

@@ -6,7 +6,7 @@
 == Intro-Promo
 
 You're a full-stack developer on Rails.
-And you'd like the setup of your servers to be smooth.
+And you'd like setup and maintenance of your servers to be smooth.
 As smooth as development in Ruby is.
 {Docker-smooth}[https://www.docker.com].
 Plus, you probably work in a team.
@@ -86,7 +86,7 @@ You're welcome to clone https://github.com/codefresh-io/cwock
 Currently, Codefresh works with either GitHub or Bitbucket,
 with git being the supported source control technology,
 so familiarity with the latter as well as the repository being hosted at GitHub (or Bitbucket)
-would be the only prerequisites to get started.
+would be the only prerequisite to get started.
 
 TBD
 

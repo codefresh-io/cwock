@@ -10,6 +10,7 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
       'focus .content .input': 'onContentFocus'
       'input .content .input': 'onContentInput'
       'blur .content .input': 'onContentBlur'
+      'keypress .input': 'onKeyPress'
 
     bindings:
       '.taken_at .value':
@@ -77,7 +78,7 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
 
     onSecond: (date)->
       if @isTicking()
-        @model.set 'taken_at', date.getTime()
+        @model.set 'taken_at', date
       else
         @updateNowNav false
 
@@ -91,6 +92,10 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
         @$el.removeClass 'focused'
         @was_focused = false
 
+      # NOTE taken_at is a given at the moment
+      if (content = @$('.content .input').text())
+        @model.save content: content, taken_at: @model.get('taken_at')
+
     onContentFocus: ->
       @content_focused = true
       @onFocus()
@@ -103,9 +108,14 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
       @onBlur()
 
     onTakenAtFocus: ->
-      @$('.taken_at .input').trigger 'blur'  # XXX temp
+      @$('.content .input').trigger 'focus'  # XXX temp
 
     onTakenAtBlur: ->
+
+    onKeyPress: (e)->
+      if e && (e.keyCode == 10 || e.keyCode == 13)  # NOTE Enter
+        $(e.target).trigger 'blur'
+        e.preventDefault()
 
     onNavNow: (e)->
       if @isNewModel()
