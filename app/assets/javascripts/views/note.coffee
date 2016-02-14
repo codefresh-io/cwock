@@ -15,24 +15,10 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
     bindings:
       '.taken_at .value':
         observe: 'taken_at',
-        onGet: (taken_at)->  # XXX too much processing — when taken_at changes
-          mom = moment(taken_at)
-          @$el.css top: "#{mom.diff(moment(mom).startOf('day'), 'hours', true) * 100/24}%"
-          _.tap(
-            if @isTicking()
-              @scrollToSelf()
-              @updateNowNav true
-              mom.format('LTS')
-            else
-              mom.format 'LT'
-            , (formatted)=>
-              @$('.taken_at .input').text(formatted)  unless @taken_at_focused || @taken_at_input
-          )
+        onGet: 'renderFormatTakenAt'
       '.content .value':
         observe: 'content',
-        onGet: (content)->
-          @$('.content .input').text(content)  unless @content_focused || @content_input
-          content
+        onGet: 'renderFormatContent'
 
     template: _.template(
       '<div class="taken_at"><time class="value"></time><time class="input" contenteditable="true"></time></div>' +
@@ -45,10 +31,6 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
 
       @model.set 'content', "quid faciens"  if @isNewModel() && !@model.get('content')
 
-      # XXX must be in onAttach, but couldn't get it working
-      @listenTo window, 'resize', @stickit
-      @listenTo ticker, 'second', @onSecond
-
     isNewModel: ->
       !@model.id
     isModelPersisted: ->
@@ -59,28 +41,48 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
     isTicking: ->
       @isNewModel() && @isFocused() && !@taken_at_focused && !@$('.content .input').text()
 
+    renderFormatTakenAt: (taken_at)->
+      mom = moment(taken_at)
+      @$el.css top: "#{mom.diff(moment(mom).startOf('day'), 'hours', true) * 100/24}%"
+      _(
+        if @isTicking()
+          mom.format('LTS')
+        else
+          mom.format 'LT'
+      ).tap (formatted)=>
+        @$('.taken_at .input').text(formatted)  unless @taken_at_focused || @taken_at_input
+    renderFormatContent: (content)->
+      _(content).tap (formatted)=>
+        @$('.content .input').text(content)  unless @content_focused || @content_input
 
     onRender: ->
-      unless @rendered
+      unless @rendered  # XXX must be in onAttach, but couldn't get it working
         if @isNewModel()
+          @listenTo ticker, 'second', @onSecond
+          @listenTo ticker, 'minute', @onMinute
+          _.defer => @onMinute()
+
           @onNavNowCallback = => @onNavNow arguments...
           $('.nav-cwock-now').on 'click', @onNavNowCallback
           _.defer @onNavNowCallback
           @content_focused = true  # NOTE setting in advance to take effect on stickit
 
-        @stickit()
+        @onResizeCallback = => @onResize arguments...
+        $(window).on 'resize', @onResizeCallback
+        @onScrollCallback = => @onScroll arguments...
+        $(window).on 'scroll', @onScrollCallback
+
+      @onResize()
 
       @rendered = true
 
-    onBeforeDestroy: ->
-      @updateNowNav false
-      $('.nav-cwock-now').off 'click', @onNavNowCallback  if @onNavNowCallback
+    onResize: ->
+      @stickit()
 
     onSecond: (date)->
-      if @isTicking()
-        @model.set 'taken_at', date
-      else
-        @updateNowNav false
+      @model.set 'taken_at', date  if @isTicking()
+    onMinute: ->
+      @scrollToSelf()  if @isTicking()
 
     onFocus: ->
       if !@was_focused
@@ -96,11 +98,14 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
       if (content = @$('.content .input').text())
         @model.save content: content, taken_at: @model.get('taken_at')
 
+      @updateNowNav false
+
     onContentFocus: ->
       @content_focused = true
       @onFocus()
 
     onContentInput: ->
+      @updateNowNav false  if @isNewModel()  # NOTE there should be just one new model
       @content_input = true
 
     onContentBlur: ->
@@ -127,10 +132,23 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note', '
 
       e.preventDefault()  if e
 
+    onBeforeDestroy: ->
+      @updateNowNav false
+      $('.nav-cwock-now').off 'click', @onNavNowCallback  if @onNavNowCallback
+      $(window).off 'resize', @onResizeCallback  if @onResizeCallback
+      $(window).off 'scroll', @onScrollCallback  if @onScrollCallback
+
     updateNowNav: (is_now)->
       if is_now != @was_now
         $('.nav-cwock-now').toggleClass 'active', is_now
         @was_now = is_now
 
+    onScroll: (e)->
+      @updateNowNav false
+
     scrollToSelf: ->
-      $.scrollTo @$el, {offset: -$(window).height()/2}
+      $.scrollTo @$el,
+        offset: -$(window).height()/2
+        onAfter: =>
+          _.defer =>
+            @updateNowNav true  if @isTicking()

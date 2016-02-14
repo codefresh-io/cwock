@@ -63,3 +63,6 @@ define ['underscore', 'backbone.marionette', 'moment', 'ticker', 'views/note'], 
 
     onSet: ->
       @collection.set @original_collection.select((child)=> @patchedFilter child)
+
+    onBeforeDestroy: ->
+      $(window).off 'resize', @onResizeCallback  if @onResizeCallback
