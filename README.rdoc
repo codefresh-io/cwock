@@ -57,6 +57,7 @@ We encourage you to learn more about the Docker container technologies and
 + Hooray! Your image will be pushed to the registry on every successful build
 
 - Click Compositions, enter 'staging' for the Name, click the test area on the left, paste the following:
+
     web:
       image: codefresh/cwock:master
       ports:
@@ -65,6 +66,7 @@ We encourage you to learn more about the Docker container technologies and
         - db
     db:
       image: postgres
+
 - Replace 'codefresh/cwock:master' with your docker_hub_user/repo:branch
 - Review your repo's `config/database.yml` and make sure the settings above match `adapter:` and `host:` there (`postgresql` and `db` respectively)
 - Click on Save, bookmark the URL, click on Launch
@@ -76,7 +78,9 @@ We encourage you to learn more about the Docker container technologies and
 - Go back to Codefresh, click on Services
 - Click on the cogwheel (Settings) of your app service, click on the Integration Test
 - Paste the following (a command to run the specs inside the `web` component we've specified above)
+
   docker exec integration_web_1 bash -c "bin/rake db:test:prepare spec"
+
 - Select Run tests with composition, choose Staging, click on Save
 - Click on Build (click on Launch dropdown if needed)
 - Click on +'s to see the logs, see that the build succeeds...
@@ -86,12 +90,15 @@ We encourage you to learn more about the Docker container technologies and
 - Archive that your-build-failed message from Codefresh (delivered to your email registered with your GitHub/Bitbucket)
 - Make sure your local development is set up
 - Add the gem to your Gemfile
+
   group :test, :development do
     gem 'rspec-rails'
   end
+
 - Run `bundle`, run `bin/rails generate rspec:install` in your working directory
 - Then run `bin/rails generate rspec:model note` and `bin/rails generate rspec:controller notes`
 - Write some specs, such as, for controller:
+
     RSpec.describe NotesController, type: :controller do
 
       render_views
@@ -106,6 +113,7 @@ We encourage you to learn more about the Docker container technologies and
       end
 
     end
+
 - Commit, push, wait for that...
 - ...and have Codefresh deliver your-build-successful email to you right away
 

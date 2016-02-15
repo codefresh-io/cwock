@@ -205,8 +205,9 @@ even send someone (QA?) the link to your running staging server</p>
 Integration Test</p>
 </li><li>
 <p>Paste the following (a command to run the specs inside the `web` component
-we&#39;ve specified above) docker exec integration_web_1 bash -c “bin/rake
-db:test:prepare spec”</p>
+we&#39;ve specified above)</p>
+
+<p>docker exec integration_web_1 bash -c “bin/rake db:test:prepare spec”</p>
 </li><li>
 <p>Select Run tests with composition, choose Staging, click on Save</p>
 </li><li>
@@ -225,7 +226,9 @@ email registered with your GitHub/Bitbucket)</p>
 </li><li>
 <p>Make sure your local development is set up</p>
 </li><li>
-<p>Add the gem to your Gemfile group :test, :development do</p>
+<p>Add the gem to your Gemfile</p>
+
+<p>group :test, :development do</p>
 
 <pre class="ruby"><span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;rspec-rails&#39;</span>
 </pre>
