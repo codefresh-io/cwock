@@ -2,9 +2,9 @@
 
 <html>
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 
-<title>README - RDoc Documentation</title>
+<title>README - Rails Application Documentation</title>
 
 <script type="text/javascript">
   var rdoc_rel_prefix = "./";
@@ -126,7 +126,7 @@ sample app repo</a> if you don&#39;t have a generic Rails app handy</p>
 your GitHub or Bitbucket account</p>
 </li></ul>
 
-<p>+ Welcome! Feel free to look around and ask questions</p>
+<p><strong>+ Welcome! Feel free to look around and ask questions</strong></p>
 <ul><li>
 <p>Click on Add Service</p>
 </li><li>
@@ -149,9 +149,9 @@ click on Next</p>
 <p>Click on +&#39;s to see the logs, see that the build succeeds</p>
 </li></ul>
 
-<p>+ Hooray! You&#39;ve got your first service automatic image build set up:
-whenever you push to the repository, Codefresh will build automatically and
-notify on any unfortunate failures</p>
+<p><strong>+ Hooray! You&#39;ve got your first service automatic image build
+set up: whenever you push to the repository, Codefresh will build
+automatically and notify on any unfortunate failures</strong></p>
 <ul><li>
 <p>Click on the cogwheel, review your Settings</p>
 </li><li>
@@ -167,11 +167,11 @@ click on Save</p>
 <p>Click on +&#39;s to see the logs, see that the build succeeds</p>
 </li></ul>
 
-<p>+ Hooray! Your image will be pushed to the registry on every successful
-build</p>
+<p><strong>+ Hooray! Your image will be pushed to the registry on every
+successful build</strong></p>
 <ul><li>
-<p>Click Compositions, enter Staging for the Name, click the test area on the
-left, paste the following:</p>
+<p>Click Compositions, enter &#39;staging&#39; for the Name, click the test
+area on the left, paste the following:</p>
 
 <pre>web:
   image: codefresh/cwock:master
@@ -196,17 +196,19 @@ respectively)</p>
 <p>Click on Open App and see your app running at our crafted URL</p>
 </li></ul>
 
-<p>+ Hooray! You have just effortlessly run your first composition, you may
-even send someone (QA?) the link to your running staging server!</p>
+<p><strong>+ Hooray! You have just effortlessly run your first composition,
+you may even send someone (QA?) the link to your running staging
+server</strong></p>
 <ul><li>
 <p>Go back to Codefresh, click on Services</p>
 </li><li>
 <p>Click on the cogwheel (Settings) of your app service, click on the
 Integration Test</p>
 </li><li>
-<p>Paste the following (a command to run the specs inside the “web” component
-we&#39;ve specified above) docker exec integration_web_1 bash -c “bin/rake
-db:test:prepare spec”</p>
+<p>Paste the following (a command to run the specs inside the `web` component
+we&#39;ve specified above)</p>
+
+<pre>docker exec integration_web_1 bash -c &quot;bin/rake db:test:prepare spec&quot;</pre>
 </li><li>
 <p>Select Run tests with composition, choose Staging, click on Save</p>
 </li><li>
@@ -215,19 +217,74 @@ db:test:prepare spec”</p>
 <p>Click on +&#39;s to see the logs, see that the build succeeds…</p>
 </li></ul>
 
-<p>+ Wait! It actually fails, we forgot to add the specs themselves, let&#39;s
-do just that</p>
+<p><strong>+ Wait! If you cloned our sample repository above, it actually
+fails, since we forgot to add the <a
+href="https://www.relishapp.com/rspec/rspec-rails/docs">specs</a>
+themselves, let&#39;s do just that</strong></p>
 <ul><li>
-<p>TBD</p>
+<p>Archive that your-build-failed message from Codefresh (delivered to your
+email registered with your GitHub/Bitbucket)</p>
+</li><li>
+<p>Make sure your local development is set up</p>
+</li><li>
+<p>Add the gem to your Gemfile</p>
+
+<pre class="ruby"><span class="ruby-identifier">group</span> :<span class="ruby-identifier">test</span>, :<span class="ruby-identifier">development</span> <span class="ruby-keyword">do</span>
+  <span class="ruby-identifier">gem</span> <span class="ruby-string">&#39;rspec-rails&#39;</span>
+<span class="ruby-keyword">end</span>
+</pre>
+</li><li>
+<p>Run `bundle`, run `bin/rails generate rspec:install` in your working
+directory</p>
+</li><li>
+<p>Then run `bin/rails generate rspec:model note` and `bin/rails generate
+rspec:controller notes`</p>
+</li><li>
+<p>Write some specs, such as, for controller:</p>
+
+<pre class="ruby"><span class="ruby-constant">RSpec</span>.<span class="ruby-identifier">describe</span> <span class="ruby-constant">NotesController</span>, <span class="ruby-identifier">type</span><span class="ruby-operator">:</span> :<span class="ruby-identifier">controller</span> <span class="ruby-keyword">do</span>
+
+  <span class="ruby-identifier">render_views</span>
+
+  <span class="ruby-identifier">describe</span> <span class="ruby-string">&#39;GET index&#39;</span> <span class="ruby-keyword">do</span>
+
+    <span class="ruby-identifier">it</span> <span class="ruby-string">&quot;should be OK&quot;</span> <span class="ruby-keyword">do</span>
+      <span class="ruby-identifier">get</span> :<span class="ruby-identifier">index</span>
+      <span class="ruby-identifier">expect</span>(<span class="ruby-identifier">response</span>).<span class="ruby-identifier">to</span> <span class="ruby-identifier">be_success</span>
+    <span class="ruby-keyword">end</span>
+
+  <span class="ruby-keyword">end</span>
+
+<span class="ruby-keyword">end</span>
+</pre>
+</li><li>
+<p>Commit, push, wait for that…</p>
+</li><li>
+<p>…and have Codefresh deliver your-build-successful email to you right away</p>
 </li></ul>
 
-<p>+ Hooray! Stretch, your project is set up, now every push to your
+<p><strong>+ Hooray! Stretch, your project is set up, now every push to your
 repo/branch will trigger a build just like this and you will get a
-notification if it fails…</p>
+notification if it fails…</strong></p>
 
-<p>+ …and if it doesn&#39;t fail, you may always go to the URL you bookmarked
-above, click on Launch and then, on Open App, to go straight to your
-freshly started staging server</p>
+<p><strong>+ …and if it doesn&#39;t fail, you may always go to the URL you
+bookmarked above, click on Launch and then, on Open App, to go straight to
+your freshly started staging server</strong></p>
+<ul><li>
+<p>When your code is tested and ready for production, click on Images, see
+your successfully built image with the latest commit message</p>
+</li><li>
+<p>Click up arrow / Promote on that image, enter &#39;production&#39; (the tag
+you will use for production-deployed images)</p>
+</li><li>
+<p>Now go set up your production environment (e.g. with {Docker Cloud}{<a
+href="https://cloud.docker.com">cloud.docker.com</a>}) where you can set
+deploy and auto-re-deploy processes based on tags</p>
+</li></ul>
+
+<p><strong>+ We&#39;re done and we&#39;ve done well, <a
+href="mailto:contact@codefresh.io">contact Codefresh</a> if you need help
+with anything on the way or just wish to share your experience</strong></p>
 
 <h2 id="label-Take+a+generic+Rails+app...">Take a generic Rails app…<span><a href="#label-Take+a+generic+Rails+app...">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
