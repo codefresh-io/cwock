@@ -1,4 +1,4 @@
-\&#x1f554; \&#x1f560; \&#x1f555; \&#x1f561; \&#x1f556; \&#x1f562; \&#x1f557; \&#x1f563; \&#x1f558; \&#x1f564; \&#x1f559; \&#x1f565; \&#x1f55a; \&#x1f566; \&#x1f55b; \&#x1f567; \&#x1f550; \&#x1f55c; \&#x1f551; \&#x1f55d; \&#x1f552; \&#x1f55e; \&#x1f553; \&#x1f55f;
+( *code* fresh )
 
 = {Cwock}[https://cwock.com] --- the time-oriented microblog
 *A* {Codefresh}[https://codefresh.io] *demo* */* *Getting* *Started* *with* {Codefresh}[https://codefresh.io] *on* {Rails}[http://rubyonrails.org].
@@ -27,16 +27,16 @@ You and your team will have instant access to and clear visibility of your runni
 at codefresh.io and through webhook-based integrations.
 
 We encourage you to learn more about the Docker container technologies and
-{here's a nice article}[http://blog.carbonfive.com/2015/03/17/docker-rails-docker-compose-together-in-your-development-workflow/] you may start with.
+{here's a nice article on Ruby on Rails on Docker Compose}[http://blog.carbonfive.com/2015/03/17/docker-rails-docker-compose-together-in-your-development-workflow/] you may start with.
 
 
---
-== TL;DR
-++
 == Brief Walkthrough
 
 - {Fork (or clone+push) our sample app repo}[https://github.com/codefresh-io/cwock] if you don't have a generic Rails app handy
 - Register with {Codefresh}[https://codefresh.io] for FREE with your GitHub or Bitbucket account
+
++ Welcome! Feel free to look around and ask questions
+
 - Click on Add Service
 - Choose your Repository and Branch, click on Next
 - Choose Rails Dockerfile if you don't have one in the repo, click on Next
@@ -45,36 +45,49 @@ We encourage you to learn more about the Docker container technologies and
 - Make sure the (unit) Test script is empty, click on Create
 - Review the results, click on Close & Build
 - Click on +'s to see the logs, see that the build succeeds
+
++ Hooray! You've got your first service automatic image build set up: whenever you push to the repository, Codefresh will build automatically and notify on any unfortunate failures
+
 - Click on the cogwheel, review your Settings
+- Make sure Image Name matches your docker hub username (e.g. docker_hub_user/repo)
 - Click on Push to Docker Registry, click on the {Docker Hub}[http://hub.docker.com] icon, follow the instructions, click on Save
-- Click Compositions, enter Staging for the Name, paste the following to the body on the right:
+- Click on Build (click on Launch dropdown if needed)
+- Click on +'s to see the logs, see that the build succeeds
+
++ Hooray! Your image will be pushed to the registry on every successful build
+
+- Click Compositions, enter Staging for the Name, click the test area on the left, paste the following:
     web:
       image: codefresh/cwock:master
+      ports:
+        - 3000
       links:
         - db
-      ports:
-        - 8000:3000
-        - 3333:3333
-      environment:
-        - RUBY_DEBUG_PORT=3333
     db:
       image: postgres
 - Replace 'codefresh/cwock:master' with your docker_hub_user/repo:branch
-- Remove the {'RUBY_DEBUG_PORT` environment variable}[http://mines.mouldwarp.com/2014/06/pow-and-byebug-staying-in-web-app-dev.html] if security is an issue
 - Review your repo's `config/database.yml` and make sure the settings above match `adapter:` and `host:` there (`postgresql` and `db` respectively)
 - Click on Save, bookmark the URL, click on Launch
 - Click on +'s to see the logs, see that the launch succeeds
 - Click on Open App and see your app running at our crafted URL
+
++ Hooray! You have just effortlessly run your first composition, you may even send someone (QA?) the link to your running staging server!
+
 - Go back to Codefresh, click on Services
 - Click on the cogwheel (Settings) of your app service, click on the Integration Test
-- Paste the following to the test body
-    bin/rake db:test:prepare
-    bin/rake spec
+- Paste the following (a command to run the specs inside the "web" component we've specified above)
+  docker exec integration_web_1 bash -c "bin/rake db:test:prepare spec"
 - Select Run tests with composition, choose Staging, click on Save
 - Click on Build (click on Launch dropdown if needed)
-- Click on +'s to see the logs, see that the build succeeds
-- Stretch, your project is set up, now every push to your repo/branch will trigger a build just like this and you will get a notification if it fails
-- And if it doesn't fail, you may always go to the URL you bookmarked above, click on Launch and then, on Open App, to go straight to your fresh staging server
+- Click on +'s to see the logs, see that the build succeeds...
+
++ Wait! It actually fails, we forgot to add the specs themselves, let's do just that
+
+- TBD
+
++ Hooray! Stretch, your project is set up, now every push to your repo/branch will trigger a build just like this and you will get a notification if it fails...
+
++ ...and if it doesn't fail, you may always go to the URL you bookmarked above, click on Launch and then, on Open App, to go straight to your freshly started staging server
 
 
 == Take a generic Rails app...

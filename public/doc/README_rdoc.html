@@ -82,10 +82,7 @@
 
 <main role="main" aria-label="Page README.rdoc">
 
-<p>&#x1f554; &#x1f560; &#x1f555; &#x1f561; &#x1f556; &#x1f562; &#x1f557;
-&#x1f563; &#x1f558; &#x1f564; &#x1f559; &#x1f565; &#x1f55a; &#x1f566;
-&#x1f55b; &#x1f567; &#x1f550; &#x1f55c; &#x1f551; &#x1f55d; &#x1f552;
-&#x1f55e; &#x1f553; &#x1f55f;</p>
+<p>( <strong>code</strong> fresh )</p>
 
 <h1 id="label-Cwock+---+the+time-oriented+microblog"><a href="https://cwock.com">Cwock</a> — the time-oriented microblog<span><a href="#label-Cwock+---+the+time-oriented+microblog">&para;</a> <a href="#top">&uarr;</a></span></h1>
 
@@ -97,10 +94,10 @@ href="http://rubyonrails.org">Rails</a>.</p>
 
 <h2 id="label-Intro-Promo">Intro-Promo<span><a href="#label-Intro-Promo">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
-<p>You&#39;re a full-stack developer on Rails. And you&#39;d like the setup of
-your servers to be smooth. As smooth as development in Ruby is. <a
-href="https://www.docker.com">Docker-smooth</a>. Plus, you probably work in
-a team. We&#39;ve got you. Wrap your stack up, afresh.</p>
+<p>You&#39;re a full-stack developer on Rails. And you&#39;d like setup and
+maintenance of your servers to be smooth. As smooth as development in Ruby
+is. <a href="https://www.docker.com">Docker-smooth</a>. Plus, you probably
+work in a team. We&#39;ve got you. Wrap your stack up, afresh.</p>
 
 <p>In case you&#39;re still wondering, working with containers makes you even
 full-stack-er. Now however full-stack you are, setting servers up isn&#39;t
@@ -118,7 +115,7 @@ at codefresh.io and through webhook-based integrations.</p>
 <p>We encourage you to learn more about the Docker container technologies and
 <a
 href="http://blog.carbonfive.com/2015/03/17/docker-rails-docker-compose-together-in-your-development-workflow/">here’s
-a nice article</a> you may start with.</p>
+a nice article on Ruby on Rails on Docker Compose</a> you may start with.</p>
 
 <h2 id="label-Brief+Walkthrough">Brief Walkthrough<span><a href="#label-Brief+Walkthrough">&para;</a> <a href="#top">&uarr;</a></span></h2>
 <ul><li>
@@ -127,7 +124,10 @@ sample app repo</a> if you don&#39;t have a generic Rails app handy</p>
 </li><li>
 <p>Register with <a href="https://codefresh.io">Codefresh</a> for FREE with
 your GitHub or Bitbucket account</p>
-</li><li>
+</li></ul>
+
+<p>+ Welcome! Feel free to look around and ask questions</p>
+<ul><li>
 <p>Click on Add Service</p>
 </li><li>
 <p>Choose your Repository and Branch, click on Next</p>
@@ -147,34 +147,43 @@ click on Next</p>
 <p>Review the results, click on Close &amp; Build</p>
 </li><li>
 <p>Click on +&#39;s to see the logs, see that the build succeeds</p>
-</li><li>
+</li></ul>
+
+<p>+ Hooray! You&#39;ve got your first service automatic image build set up:
+whenever you push to the repository, Codefresh will build automatically and
+notify on any unfortunate failures</p>
+<ul><li>
 <p>Click on the cogwheel, review your Settings</p>
+</li><li>
+<p>Make sure Image Name matches your docker hub username (e.g.
+docker_hub_user/repo)</p>
 </li><li>
 <p>Click on Push to Docker Registry, click on the <a
 href="http://hub.docker.com">Docker Hub</a> icon, follow the instructions,
 click on Save</p>
 </li><li>
-<p>Click Compositions, enter Staging for the Name, paste the following to the
-body on the right:</p>
+<p>Click on Build (click on Launch dropdown if needed)</p>
+</li><li>
+<p>Click on +&#39;s to see the logs, see that the build succeeds</p>
+</li></ul>
+
+<p>+ Hooray! Your image will be pushed to the registry on every successful
+build</p>
+<ul><li>
+<p>Click Compositions, enter Staging for the Name, click the test area on the
+left, paste the following:</p>
 
 <pre>web:
   image: codefresh/cwock:master
+  ports:
+    - 3000
   links:
     - db
-  ports:
-    - 8000:3000
-    - 3333:3333
-  environment:
-    - RUBY_DEBUG_PORT=3333
 db:
   image: postgres</pre>
 </li><li>
 <p>Replace &#39;codefresh/cwock:master&#39; with your
 docker_hub_user/repo:branch</p>
-</li><li>
-<p>Remove the <a
-href="http://mines.mouldwarp.com/2014/06/pow-and-byebug-staying-in-web-app-dev.html">‘RUBY_DEBUG_PORT`
-environment variable</a> if security is an issue</p>
 </li><li>
 <p>Review your repo&#39;s `config/database.yml` and make sure the settings
 above match `adapter:` and `host:` there (`postgresql` and `db`
@@ -185,30 +194,40 @@ respectively)</p>
 <p>Click on +&#39;s to see the logs, see that the launch succeeds</p>
 </li><li>
 <p>Click on Open App and see your app running at our crafted URL</p>
-</li><li>
+</li></ul>
+
+<p>+ Hooray! You have just effortlessly run your first composition, you may
+even send someone (QA?) the link to your running staging server!</p>
+<ul><li>
 <p>Go back to Codefresh, click on Services</p>
 </li><li>
 <p>Click on the cogwheel (Settings) of your app service, click on the
 Integration Test</p>
 </li><li>
-<p>Paste the following to the test body</p>
-
-<pre>bin/rake db:test:prepare
-bin/rake spec</pre>
+<p>Paste the following (a command to run the specs inside the “web” component
+we&#39;ve specified above) docker exec integration_web_1 bash -c “bin/rake
+db:test:prepare spec”</p>
 </li><li>
 <p>Select Run tests with composition, choose Staging, click on Save</p>
 </li><li>
 <p>Click on Build (click on Launch dropdown if needed)</p>
 </li><li>
-<p>Click on +&#39;s to see the logs, see that the build succeeds</p>
-</li><li>
-<p>Stretch, your project is set up, now every push to your repo/branch will
-trigger a build just like this and you will get a notification if it fails</p>
-</li><li>
-<p>And if it doesn&#39;t fail, you may always go to the URL you bookmarked
-above, click on Launch and then, on Open App, to go straight to your fresh
-staging server</p>
+<p>Click on +&#39;s to see the logs, see that the build succeeds…</p>
 </li></ul>
+
+<p>+ Wait! It actually fails, we forgot to add the specs themselves, let&#39;s
+do just that</p>
+<ul><li>
+<p>TBD</p>
+</li></ul>
+
+<p>+ Hooray! Stretch, your project is set up, now every push to your
+repo/branch will trigger a build just like this and you will get a
+notification if it fails…</p>
+
+<p>+ …and if it doesn&#39;t fail, you may always go to the URL you bookmarked
+above, click on Launch and then, on Open App, to go straight to your
+freshly started staging server</p>
 
 <h2 id="label-Take+a+generic+Rails+app...">Take a generic Rails app…<span><a href="#label-Take+a+generic+Rails+app...">&para;</a> <a href="#top">&uarr;</a></span></h2>
 
@@ -220,7 +239,7 @@ href="https://github.com/codefresh-io/cwock">github.com/codefresh-io/cwock</a>
 <p>Currently, Codefresh works with either GitHub or Bitbucket, with git being
 the supported source control technology, so familiarity with the latter as
 well as the repository being hosted at GitHub (or Bitbucket) would be the
-only prerequisites to get started.</p>
+only prerequisite to get started.</p>
 
 <p>TBD</p>
 
