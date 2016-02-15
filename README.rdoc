@@ -35,7 +35,7 @@ We encourage you to learn more about the Docker container technologies and
 - {Fork (or clone+push) our sample app repo}[https://github.com/codefresh-io/cwock] if you don't have a generic Rails app handy
 - Register with {Codefresh}[https://codefresh.io] for FREE with your GitHub or Bitbucket account
 
-+ Welcome! Feel free to look around and ask questions
+<b>+ Welcome! Feel free to look around and ask questions</b>
 
 - Click on Add Service
 - Choose your Repository and Branch, click on Next
@@ -46,7 +46,7 @@ We encourage you to learn more about the Docker container technologies and
 - Review the results, click on Close & Build
 - Click on +'s to see the logs, see that the build succeeds
 
-+ Hooray! You've got your first service automatic image build set up: whenever you push to the repository, Codefresh will build automatically and notify on any unfortunate failures
+<b>+ Hooray! You've got your first service automatic image build set up: whenever you push to the repository, Codefresh will build automatically and notify on any unfortunate failures</b>
 
 - Click on the cogwheel, review your Settings
 - Make sure Image Name matches your docker hub username (e.g. docker_hub_user/repo)
@@ -54,10 +54,9 @@ We encourage you to learn more about the Docker container technologies and
 - Click on Build (click on Launch dropdown if needed)
 - Click on +'s to see the logs, see that the build succeeds
 
-+ Hooray! Your image will be pushed to the registry on every successful build
+<b>+ Hooray! Your image will be pushed to the registry on every successful build</b>
 
 - Click Compositions, enter 'staging' for the Name, click the test area on the left, paste the following:
-
     web:
       image: codefresh/cwock:master
       ports:
@@ -66,39 +65,33 @@ We encourage you to learn more about the Docker container technologies and
         - db
     db:
       image: postgres
-
 - Replace 'codefresh/cwock:master' with your docker_hub_user/repo:branch
 - Review your repo's `config/database.yml` and make sure the settings above match `adapter:` and `host:` there (`postgresql` and `db` respectively)
 - Click on Save, bookmark the URL, click on Launch
 - Click on +'s to see the logs, see that the launch succeeds
 - Click on Open App and see your app running at our crafted URL
 
-+ Hooray! You have just effortlessly run your first composition, you may even send someone (QA?) the link to your running staging server
+<b>+ Hooray! You have just effortlessly run your first composition, you may even send someone (QA?) the link to your running staging server</b>
 
 - Go back to Codefresh, click on Services
 - Click on the cogwheel (Settings) of your app service, click on the Integration Test
 - Paste the following (a command to run the specs inside the `web` component we've specified above)
-
-  docker exec integration_web_1 bash -c "bin/rake db:test:prepare spec"
-
+    docker exec integration_web_1 bash -c "bin/rake db:test:prepare spec"
 - Select Run tests with composition, choose Staging, click on Save
 - Click on Build (click on Launch dropdown if needed)
 - Click on +'s to see the logs, see that the build succeeds...
 
-+ Wait! If you cloned our sample repository above, it actually fails, since we forgot to add the {specs}[https://www.relishapp.com/rspec/rspec-rails/docs] themselves, let's do just that
+<b>+ Wait! If you cloned our sample repository above, it actually fails, since we forgot to add the {specs}[https://www.relishapp.com/rspec/rspec-rails/docs] themselves, let's do just that</b>
 
 - Archive that your-build-failed message from Codefresh (delivered to your email registered with your GitHub/Bitbucket)
 - Make sure your local development is set up
 - Add the gem to your Gemfile
-
-  group :test, :development do
-    gem 'rspec-rails'
-  end
-
+    group :test, :development do
+      gem 'rspec-rails'
+    end
 - Run `bundle`, run `bin/rails generate rspec:install` in your working directory
 - Then run `bin/rails generate rspec:model note` and `bin/rails generate rspec:controller notes`
 - Write some specs, such as, for controller:
-
     RSpec.describe NotesController, type: :controller do
 
       render_views
@@ -113,19 +106,18 @@ We encourage you to learn more about the Docker container technologies and
       end
 
     end
-
 - Commit, push, wait for that...
 - ...and have Codefresh deliver your-build-successful email to you right away
 
-+ Hooray! Stretch, your project is set up, now every push to your repo/branch will trigger a build just like this and you will get a notification if it fails...
+<b>+ Hooray! Stretch, your project is set up, now every push to your repo/branch will trigger a build just like this and you will get a notification if it fails...</b>
 
-+ ...and if it doesn't fail, you may always go to the URL you bookmarked above, click on Launch and then, on Open App, to go straight to your freshly started staging server
+<b>+ ...and if it doesn't fail, you may always go to the URL you bookmarked above, click on Launch and then, on Open App, to go straight to your freshly started staging server</b>
 
 - When your code is tested and ready for production, click on Images, see your successfully built image with the latest commit message
 - Click up arrow / Promote on that image, enter 'production' (the tag you will use for production-deployed images)
 - Now go set up your production environment (e.g. with {Docker Cloud}{https://cloud.docker.com}) where you can set deploy and auto-re-deploy processes based on tags
 
-+ We're done and we've done well, {contact Codefresh}[mailto:contact@codefresh.io] if you need help with anything on the way or just wish to share your experience
+<b>+ We're done and we've done well, {contact Codefresh}[mailto:contact@codefresh.io] if you need help with anything on the way or just wish to share your experience</b>
 
 
 == Take a generic Rails app...
