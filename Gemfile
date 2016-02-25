@@ -21,13 +21,14 @@ gem 'sdoc'
 # CAUTION gems are in this group for a reason!
 group :development, :test do
   gem 'byebug', require: 'byebug/core'
-  gem 'web-console'
   gem 'coffee-script-source'
 end
 
 group :development do
+  gem 'rspec-rails'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  gem 'web-console'
 
   gem 'guard-rails'
   gem 'guard-rdoc'
