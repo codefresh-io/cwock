@@ -16,7 +16,7 @@ gem 'requirejs-rails'  # XXX requirejs-rails is kinda broken atm, see config/pro
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
 
-gem 'sdoc'
+gem 'sdoc', '>= 1.0.0'
 
 # CAUTION gems are in this group for a reason!
 group :development, :test do
